@@ -3,6 +3,8 @@ import { act, render, screen, within } from "@testing-library/react";
 import PostWithComment, { type Comment } from "./PostWithComment";
 
 import axios from "axios";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 
 // vi.mock("./assets/DataService", () => ({
 //   getCommentsForPost: () => {
@@ -29,6 +31,15 @@ describe("Post with Comment", () => {
     },
   ];
   const someId = "123";
+
+  const server = setupServer(
+    http.get("http://localhost:4000/comments/*", () => {
+      return HttpResponse.json(someComments);
+    })
+  );
+  beforeAll(() => server.listen());
+  afterAll(() => server.close());
+  afterAll(() => server.resetHandlers());
 
   //   beforeEach(() => {
   //     render(<PostWithComment content={someDesc} user={someName} id="123" />);
@@ -149,6 +160,23 @@ describe("Post with Comment", () => {
       });
       const errorLabel = screen.getByTestId("error-label");
       expect(errorLabel).not.toBeEmptyDOMElement();
+    });
+    it("should load received comments", async () => {
+      await act(async () => {
+        render(
+          <PostWithComment
+            user={"someUserName"}
+            content={"someContent"}
+            id={someId}
+          ></PostWithComment>
+        );
+      });
+
+      const commentsContainer = screen.getByTestId("post-comment-container");
+      const comments = within(commentsContainer).getAllByRole("paragraph");
+      expect(comments.length).toBe(2);
+      expect(comments[0]).toHaveTextContent(someComments[0].content);
+      expect(comments[1]).toHaveTextContent(someComments[1].content);
     });
   });
 });
