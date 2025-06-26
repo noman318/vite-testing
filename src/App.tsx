@@ -1,0 +1,19 @@
+import PostWithComment from "./PostWithComment";
+
+function App() {
+  // const ingredients = ["Apples", "Bananas", "Ham", "Brea", "Bread"];
+
+  // const someFunction = (selectedItem: string) => {
+  //   console.log(`Selected ${selectedItem}`);
+  // };
+  return (
+    <>
+      {/* <Sample content="test" user="Noman" likesBy={["No one"]} /> */}
+      {/* <UseArrayEx /> */}
+      <PostWithComment content="test" user="Noman" id={"123"} />
+      {/* <ShoppingList groceries={ingredients} selectItem={someFunction} /> */}
+    </>
+  );
+}
+
+export default App;
