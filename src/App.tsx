@@ -1,4 +1,4 @@
-import PostWithComment from "./PostWithComment";
+import { AppWithRoutes } from "./router/AppWithRoute";
 
 function App() {
   // const ingredients = ["Apples", "Bananas", "Ham", "Brea", "Bread"];
@@ -10,7 +10,8 @@ function App() {
     <>
       {/* <Sample content="test" user="Noman" likesBy={["No one"]} /> */}
       {/* <UseArrayEx /> */}
-      <PostWithComment content="test" user="Noman" id={"123"} />
+      {/* <PostWithComment content="test" user="Noman" id={"123"} /> */}
+      <AppWithRoutes />
       {/* <ShoppingList groceries={ingredients} selectItem={someFunction} /> */}
     </>
   );

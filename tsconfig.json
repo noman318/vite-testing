@@ -5,13 +5,6 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": [
-      "node",
-      "jest",
-      "vitest/globals",
-      "@testing-library/jest-dom",
-      "@testing-library/user-event",
-      "@testing-library/react"
-    ]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"]
   }
 }
