@@ -1,4 +1,4 @@
-import { AppWithRoutes } from "./router/AppWithRoute";
+import Sample from "./Sample";
 
 function App() {
   // const ingredients = ["Apples", "Bananas", "Ham", "Brea", "Bread"];
@@ -8,10 +8,10 @@ function App() {
   // };
   return (
     <>
-      {/* <Sample content="test" user="Noman" likesBy={["No one"]} /> */}
+      <Sample content="test" user="Noman" />
       {/* <UseArrayEx /> */}
       {/* <PostWithComment content="test" user="Noman" id={"123"} /> */}
-      <AppWithRoutes />
+      {/* <AppWithRoutes /> */}
       {/* <ShoppingList groceries={ingredients} selectItem={someFunction} /> */}
     </>
   );

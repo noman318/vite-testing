@@ -38,4 +38,15 @@ describe("Post Component", () => {
     expect(likes[1]).toHaveTextContent("Aman");
     expect(likes[2]).toHaveTextContent("etcs");
   });
+
+  it("snapshot test", () => {
+    const rendered = render(
+      <Sample
+        content={"it's good"}
+        user={"Noman"}
+        likesBy={["Noman", "Aman", "etcs"]}
+      />
+    );
+    expect(rendered.asFragment()).toMatchSnapshot();
+  });
 });

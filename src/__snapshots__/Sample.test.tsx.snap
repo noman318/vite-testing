@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Post Component > snapshot test 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="post-container"
+  >
+    Add commentMore actions
+    <h2>
+      Noman:
+    </h2>
+    <p>
+      it's good
+    </p>
+    <div
+      data-testid="likes-container"
+    >
+      <h3>
+        Likes by:
+      </h3>
+      <ul>
+        <li>
+          Noman
+        </li>
+        <li>
+          Aman
+        </li>
+        <li>
+          etcs
+        </li>
+      </ul>
+    </div>
+  </div>
+</DocumentFragment>
+`;
