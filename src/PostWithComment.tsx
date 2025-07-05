@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { getCommentsForPostWithAxios } from "./ApiDataService";
+import { getCommentsForPost, postComment } from "./DataService";
 
 export type Comment = {
   content: string;
+  date: number;
 };
 
-let nextId = 0;
 const PostWithComment = (props: {
   content: string;
   user: string;
@@ -18,7 +18,8 @@ const PostWithComment = (props: {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const comments = await getCommentsForPostWithAxios(props.id);
+        const comments = await getCommentsForPost(props.id);
+        sortCommentBydate(comments);
         setComments(comments);
       } catch (error) {
         console.error((error as Error).message);
@@ -44,18 +45,23 @@ const PostWithComment = (props: {
         />
         <button
           onClick={() => {
+            const now = new Date().getTime();
             comments.push({
               content: comment,
+              date: now,
             });
             setComment("");
+            postComment(props.id, comment, now);
           }}
         >
           Comment
         </button>
         <div data-testid="post-comment-container">
-          {comments.map((comment) => {
-            return <p key={nextId++}>{comment.content}</p>;
-          })}
+          {comments.map((comment, index) => (
+            <p data-testid="comment-text" key={index}>
+              {comment.content}
+            </p>
+          ))}
         </div>
       </div>
     </div>
@@ -63,3 +69,7 @@ const PostWithComment = (props: {
 };
 
 export default PostWithComment;
+
+function sortCommentBydate(comments: Comment[]) {
+  return comments?.sort((a, b) => b.date - a.date);
+}

@@ -1,10 +1,9 @@
 import { act, render, screen, within } from "@testing-library/react";
 
-import PostWithComment, { type Comment } from "./PostWithComment";
-
-import axios from "axios";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
+import * as Dataservice from "./DataService";
+import PostWithComment from "./PostWithComment";
+import userEvent from "@testing-library/user-event";
+const now = new Date().getTime();
 
 // vi.mock("./assets/DataService", () => ({
 //   getCommentsForPost: () => {
@@ -20,163 +19,131 @@ import { setupServer } from "msw/node";
 //   },
 // }));
 
-describe("Post with Comment", () => {
-  // describe("User interaction", () => {
-  const someComments: Comment[] = [
-    {
-      content: "Cool1",
-    },
-    {
-      content: "Cool2",
-    },
-  ];
-  const someId = "123";
+// describe("Post with Comment", () => {
+//   // describe("User interaction", () => {
+//   // const someComments: Comment[] = [
+//   //   {
+//   //     content: "Cool1",
+//   //     date: now,
+//   //   },
+//   //   {
+//   //     content: "Cool2",
+//   //     date: now + 1000,
+//   //   },
+//   // ];
+//   // const someId = "123";
+//   // const server = setupServer(
+//   //   http.get("http://localhost:4000/comments/*", () => {
+//   //     return HttpResponse.json(someComments);
+//   //   })
+//   // );
+//   // beforeAll(() => server.listen());
+//   // afterAll(() => server.close());
+//   // afterAll(() => server.resetHandlers());
+//   //   beforeEach(() => {
+//   //     render(<PostWithComment content={someDesc} user={someName} id="123" />);
+//   //   });
+//   //   test("user can enter", async () => {
+//   //     const user = userEvent.setup();
+//   //     const commentInput = screen.getByTestId("comment-input");
+//   //     const commentContent = "You are awesome!";
+//   //     await user.type(commentInput, commentContent);
+//   //     expect(commentInput).toHaveValue(commentContent);
+//   //   });
+//   //   test("Comment is cleared", async () => {
+//   //     const user = userEvent.setup();
+//   //     const commentInput = screen.getByTestId("comment-input");
+//   //     const commentContent = "You are awesome!";
+//   //     await user.type(commentInput, commentContent);
+//   //     const btn = screen.getByRole("button");
+//   //     await user.click(btn);
+//   //     expect(commentInput).toBeEmptyDOMElement();
+//   //   });
+//   //   test("Comment is added on screen", async () => {
+//   //     const user = userEvent.setup();
+//   //     const commentInput = screen.getByTestId("comment-input");
+//   //     const commentContent = "You are awesome!";
+//   //     await user.type(commentInput, commentContent);
+//   //     const commentButton = screen.getByRole("button");
+//   //     await user.click(commentButton);
+//   //     const commentsContainer = screen.getByTestId("post-comment-container");
+//   //     const comments = within(commentsContainer).getAllByRole("paragraph");
+//   //     expect(comments.length).toBe(1);
+//   //     expect(comments[0]).toHaveTextContent(commentContent);
+//   //   });
+//   //   test("Comment is added on screen", async () => {
+//   //     const user = userEvent.setup();
+//   //     const commentInput = screen.getByTestId("comment-input");
+//   //     const commentContent = "You are awesome!";
+//   //     await user.type(commentInput, commentContent);
+//   //     const comment1 = "You are awesome!";
+//   //     const comment2 = "Nice car!";
+//   //     const commentButton = screen.getByRole("button");
+//   //     await user.type(commentInput, comment1);
+//   //     await user.click(commentButton);
+//   //     await user.type(commentInput, comment2);
+//   //     await user.click(commentButton);
+//   //     const commentsContainer = screen.getByTestId("post-comment-container");
+//   //     const comments = within(commentsContainer).getAllByRole("paragraph");
+//   //     expect(comments.length).toBe(2);
+//   //     expect(comments[0]).toHaveTextContent(comment1);
+//   //     expect(comments[1]).toHaveTextContent(comment2);
+//   //   });
+//   // });
+// });
 
-  const server = setupServer(
-    http.get("http://localhost:4000/comments/*", () => {
-      return HttpResponse.json(someComments);
-    })
-  );
-  beforeAll(() => server.listen());
-  afterAll(() => server.close());
-  afterAll(() => server.resetHandlers());
+describe("Post with mocks", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+  it("mock the call", async () => {
+    const getCommentsForPostSpy = vi.spyOn(Dataservice, "getCommentsForPost");
 
-  //   beforeEach(() => {
-  //     render(<PostWithComment content={someDesc} user={someName} id="123" />);
-  //   });
-  //   test("user can enter", async () => {
-  //     const user = userEvent.setup();
-  //     const commentInput = screen.getByTestId("comment-input");
-  //     const commentContent = "You are awesome!";
-  //     await user.type(commentInput, commentContent);
-
-  //     expect(commentInput).toHaveValue(commentContent);
-  //   });
-
-  //   test("Comment is cleared", async () => {
-  //     const user = userEvent.setup();
-  //     const commentInput = screen.getByTestId("comment-input");
-  //     const commentContent = "You are awesome!";
-  //     await user.type(commentInput, commentContent);
-  //     const btn = screen.getByRole("button");
-  //     await user.click(btn);
-  //     expect(commentInput).toBeEmptyDOMElement();
-  //   });
-  //   test("Comment is added on screen", async () => {
-  //     const user = userEvent.setup();
-  //     const commentInput = screen.getByTestId("comment-input");
-  //     const commentContent = "You are awesome!";
-  //     await user.type(commentInput, commentContent);
-
-  //     const commentButton = screen.getByRole("button");
-  //     await user.click(commentButton);
-
-  //     const commentsContainer = screen.getByTestId("post-comment-container");
-  //     const comments = within(commentsContainer).getAllByRole("paragraph");
-  //     expect(comments.length).toBe(1);
-  //     expect(comments[0]).toHaveTextContent(commentContent);
-  //   });
-
-  //   test("Comment is added on screen", async () => {
-  //     const user = userEvent.setup();
-  //     const commentInput = screen.getByTestId("comment-input");
-  //     const commentContent = "You are awesome!";
-  //     await user.type(commentInput, commentContent);
-  //     const comment1 = "You are awesome!";
-  //     const comment2 = "Nice car!";
-
-  //     const commentButton = screen.getByRole("button");
-  //     await user.type(commentInput, comment1);
-  //     await user.click(commentButton);
-
-  //     await user.type(commentInput, comment2);
-  //     await user.click(commentButton);
-
-  //     const commentsContainer = screen.getByTestId("post-comment-container");
-  //     const comments = within(commentsContainer).getAllByRole("paragraph");
-  //     expect(comments.length).toBe(2);
-  //     expect(comments[0]).toHaveTextContent(comment1);
-  //     expect(comments[1]).toHaveTextContent(comment2);
-  //   });
-  // });
-  describe("Post with mocks", () => {
-    // it("mock the call", async () => {
-    //   const getCommentsForPostSpy = vi.spyOn(Dataservice, "getCommentsForPost");
-    //   getCommentsForPostSpy.mockResolvedValueOnce([
-    //     {
-    //       content: "Cool1",
-    //     },
-    //     {
-    //       content: "Cool2",
-    //     },
-    //   ]);
-    //   await act(async () => {
-    //     render(<PostWithComment content="Hello" id="123" user="Alex" />);
-    //   });
-
-    //   const commentsContainer = screen.getByTestId("post-comment-container");
-    //   const comments = within(commentsContainer).getAllByRole("paragraph");
-    //   expect(comments.length).toBe(2);
-    //   expect(comments[0]).toHaveTextContent("Cool1");
-    //   expect(comments[1]).toHaveTextContent("Cool2");
-    //   expect(getCommentsForPostSpy).toHaveBeenCalledTimes(1);
-    //   expect(getCommentsForPostSpy).toHaveBeenCalledWith("123");
-    // });
-    it("mock axios api call", async () => {
-      const mockAxiosSpy = vi.spyOn(axios, "get");
-      mockAxiosSpy.mockResolvedValueOnce({
-        data: someComments,
-      });
-      await act(async () => {
-        render(<PostWithComment content="Hello" id="123" user="Alex" />);
-      });
-
-      const commentsContainer = screen.getByTestId("post-comment-container");
-      const comments = within(commentsContainer).getAllByRole("paragraph");
-      expect(comments.length).toBe(2);
-      expect(comments[0]).toHaveTextContent("Cool1");
-      expect(comments[1]).toHaveTextContent("Cool2");
-      expect(mockAxiosSpy).toHaveBeenCalledTimes(1);
-      const axiosGetSpyArgs = mockAxiosSpy.mock.calls;
-      console.log(axiosGetSpyArgs);
-      const axiosGetSpyCallUrl = mockAxiosSpy.mock.calls[0][0];
-      expect(axiosGetSpyCallUrl.endsWith(someId)).toBe(true);
-      // easier:
-      const axiosGetSpyCallId = mockAxiosSpy.mock.calls[0][1]?.params.id;
-      expect(axiosGetSpyCallId).toBe("123");
+    getCommentsForPostSpy.mockResolvedValueOnce([
+      {
+        content: "Cool1",
+        date: now,
+      },
+      {
+        content: "Cool2",
+        date: now + 2000,
+      },
+    ]);
+    await act(async () => {
+      render(<PostWithComment content="Hello" id="123" user="Alex" />);
     });
-    it("Network call throws error", async () => {
-      const axiosGetSpy = vi.spyOn(axios, "get");
-      axiosGetSpy.mockRejectedValueOnce(new Error("Backend error"));
 
-      await act(async () => {
-        render(
-          <PostWithComment
-            user={"someUserName"}
-            content={"someContent"}
-            id={someId}
-          />
-        );
-      });
-      const errorLabel = screen.getByTestId("error-label");
-      expect(errorLabel).not.toBeEmptyDOMElement();
-    });
-    it("should load received comments", async () => {
-      await act(async () => {
-        render(
-          <PostWithComment
-            user={"someUserName"}
-            content={"someContent"}
-            id={someId}
-          ></PostWithComment>
-        );
-      });
+    const commentsContainer = screen.getByTestId("post-comment-container");
+    const comments = within(commentsContainer).getAllByRole("paragraph");
+    expect(comments.length).toBe(2);
+    expect(comments[0]).toHaveTextContent("Cool2");
+    expect(comments[1]).toHaveTextContent("Cool1");
+    expect(getCommentsForPostSpy).toHaveBeenCalledTimes(1);
+    expect(getCommentsForPostSpy).toHaveBeenCalledWith("123");
+  });
 
-      const commentsContainer = screen.getByTestId("post-comment-container");
-      const comments = within(commentsContainer).getAllByRole("paragraph");
-      expect(comments.length).toBe(2);
-      expect(comments[0]).toHaveTextContent(someComments[0].content);
-      expect(comments[1]).toHaveTextContent(someComments[1].content);
+  it("", async () => {
+    const postCommentSpy = vi.spyOn(Dataservice, "postComment");
+    const dateNowNumber = 1600000000000;
+
+    vi.setSystemTime(1600000000000);
+    await act(async () => {
+      render(<PostWithComment content="Hello" id="123" user="Alex" />);
     });
+
+    const user = userEvent.setup();
+    const commentInput = screen.getByTestId("comment-input");
+    const commentContent = "You are awesome!";
+    await user.type(commentInput, commentContent);
+
+    const commentButton = screen.getByRole("button");
+    await user.click(commentButton);
+
+    expect(postCommentSpy).toHaveBeenCalledTimes(1);
+    expect(postCommentSpy).toHaveBeenCalledWith(
+      "123",
+      commentContent,
+      dateNowNumber
+    );
   });
 });

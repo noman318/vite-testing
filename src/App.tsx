@@ -1,4 +1,4 @@
-import Sample from "./Sample";
+import PostWithComment from "./PostWithComment";
 
 function App() {
   // const ingredients = ["Apples", "Bananas", "Ham", "Brea", "Bread"];
@@ -8,9 +8,9 @@ function App() {
   // };
   return (
     <>
-      <Sample content="test" user="Noman" />
+      {/* <Sample content="test" user="Noman" likesBy={["Noman", "Aman", "etcs"]} /> */}
       {/* <UseArrayEx /> */}
-      {/* <PostWithComment content="test" user="Noman" id={"123"} /> */}
+      <PostWithComment content="test" user="Noman" id={"123"} />
       {/* <AppWithRoutes /> */}
       {/* <ShoppingList groceries={ingredients} selectItem={someFunction} /> */}
     </>
